@@ -18,39 +18,6 @@ import Badges from '../components/Badges';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [modalVisibility, setModalVisibility] = useState(false);
-  const {selectedCity, setselectedCity} = useContext(Places);
-  const deviceWidth = Dimensions.get('window').width;
-  const deviceHeight = Dimensions.get('window').height;
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => <Text>Hello User!</Text>,
-      headerStyle: {
-        backgroundColor: '#fff',
-        shadowColo: 'transparent',
-        shadowOpacity: 0.3,
-        shadowOffset: {width: -1, height: 1},
-        shadowRadius: 3,
-      },
-      headerRight: () => (
-        <Pressable style={styles.headerRight}>
-          <Icon name="notifications-outline" size={24} color="#BD1E1E" />
-          <Icon
-            onPress={() => navigation.navigate('placeScreen')}
-            name="location-outline"
-            size={24}
-            color="#BD1E1E"
-          />
-
-          <Pressable onPress={() => navigation.navigate('placeScreen')}>
-            <Text style={styles.cityname}>
-              {selectedCity ? selectedCity : 'Delhi'}
-            </Text>
-          </Pressable>
-        </Pressable>
-      ),
-    });
-  });
   const movieData = [
     {
       adult: false,
@@ -357,6 +324,42 @@ const HomeScreen = () => {
       vote_count: 1,
     },
   ];
+  const [sortedData, setSortedData] = useState(movieData);
+  const [modalVisibility, setModalVisibility] = useState(false);
+  const {selectedCity, setselectedCity} = useContext(Places);
+  const [selectedFilter, setSelectFilter] = useState();
+  const [applyCtaActive, setApplyCtaActive] = useState(false);
+  const deviceWidth = Dimensions.get('window').width;
+  const deviceHeight = Dimensions.get('window').height;
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => <Text>Hello User!</Text>,
+      headerStyle: {
+        backgroundColor: '#fff',
+        shadowColo: 'transparent',
+        shadowOpacity: 0.3,
+        shadowOffset: {width: -1, height: 1},
+        shadowRadius: 3,
+      },
+      headerRight: () => (
+        <Pressable style={styles.headerRight}>
+          <Icon name="notifications-outline" size={24} color="#BD1E1E" />
+          <Icon
+            onPress={() => navigation.navigate('placeScreen')}
+            name="location-outline"
+            size={24}
+            color="#BD1E1E"
+          />
+
+          <Pressable onPress={() => navigation.navigate('placeScreen')}>
+            <Text style={styles.cityname}>
+              {selectedCity ? selectedCity : 'Delhi'}
+            </Text>
+          </Pressable>
+        </Pressable>
+      ),
+    });
+  });
   const languages = [
     {
       id: '0',
@@ -409,13 +412,49 @@ const HomeScreen = () => {
       language: 'Drama',
     },
   ];
+  const appyFilterHandler = filter => {
+    setModalVisibility(false);
+    switch (filter) {
+      case 'English':
+        setSortedData(
+          sortedData.filter(item => item.original_language === selectedFilter),
+        );
+        break;
+      case 'Telgu':
+        setSortedData(
+          sortedData.filter(item => item.original_language === selectedFilter),
+        );
+        break;
+      case 'Hindi':
+        setSortedData(
+          sortedData.filter(item => item.original_language === selectedFilter),
+        );
+        break;
+      case 'Tamil':
+        setSortedData(
+          sortedData.filter(item => item.original_language === selectedFilter),
+        );
+        break;
+      case 'Malayalam':
+        setSortedData(
+          sortedData.filter(item => item.original_language === selectedFilter),
+        );
+        break;
+      case 'Kannada':
+        setSortedData(
+          sortedData.filter(item => item.original_language === selectedFilter),
+        );
+        break;
+    }
+  };
+
   return (
     <View>
       <FlatList
         numColumns={2}
         ListHeaderComponent={Header}
         columnWrapperStyle={styles.columns}
-        data={movieData}
+        data={sortedData}
         renderItem={({item, index}) => <MovieCard item={item} key={index} />}
       />
       <Pressable
@@ -442,24 +481,66 @@ const HomeScreen = () => {
             <View style={styles.languagesContainer}>
               <Text style={styles.filterContentTitle}>Languages</Text>
               <View style={styles.languages}>
-                {languages.map((lang, index) => (
-                  <Badges key={index} item={lang} />
-                ))}
+                {languages.map((lang, index) =>
+                  selectedFilter === lang.language ? (
+                    <Badges
+                      key={index}
+                      item={lang}
+                      selected={true}
+                      setChoosedFiltter={setSelectFilter}
+                      setApplyCtaActive={setApplyCtaActive}
+                    />
+                  ) : (
+                    <Badges
+                      key={index}
+                      item={lang}
+                      selected={false}
+                      setChoosedFiltter={setSelectFilter}
+                      setApplyCtaActive={setApplyCtaActive}
+                    />
+                  ),
+                )}
               </View>
             </View>
             <View style={styles.genersContainer}>
               <Text style={styles.filterContentTitle}>Geners</Text>
               <View style={styles.geners}>
-                {genres.map((lang, index) => (
-                  <Badges key={index} item={lang} />
-                ))}
+                {genres.map((lang, index) =>
+                  selectedFilter === lang.language ? (
+                    <Badges
+                      key={index}
+                      item={lang}
+                      selected={true}
+                      setChoosedFiltter={setSelectFilter}
+                      setApplyCtaActive={setApplyCtaActive}
+                    />
+                  ) : (
+                    <Badges
+                      key={index}
+                      item={lang}
+                      selected={false}
+                      setChoosedFiltter={setSelectFilter}
+                      setApplyCtaActive={setApplyCtaActive}
+                    />
+                  ),
+                )}
               </View>
             </View>
           </View>
           <View style={styles.modalFooter}>
-            <Pressable style={styles.modalFooterCta}>
-              <Text style={styles.modalFooterText}>Apply</Text>
-            </Pressable>
+            {applyCtaActive ? (
+              <Pressable
+                style={styles.modalFooterCta}
+                onPress={() => appyFilterHandler(selectedFilter)}>
+                <Text style={styles.modalFooterText}>Apply</Text>
+              </Pressable>
+            ) : (
+              <Pressable style={[styles.modalFooterCta, styles.disabledCta]}>
+                <Text style={[styles.modalFooterText, styles.disabledCtaText]}>
+                  Apply
+                </Text>
+              </Pressable>
+            )}
           </View>
         </View>
       </Modal>
@@ -559,6 +640,12 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textTransform: 'uppercase',
     textAlign: 'center',
+    color: '#fff',
+  },
+  disabledCta: {
+    backgroundColor: 'gray',
+  },
+  disabledCtaText: {
     color: '#fff',
   },
 });
