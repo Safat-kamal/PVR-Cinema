@@ -7,8 +7,11 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
+import {useNavigation} from '@react-navigation/native';
 
-const MovieCard = ({item}) => {
+const MovieCard = ({item, selectedCity}) => {
+  const naviagation = useNavigation();
+  console.log(selectedCity);
   return (
     <Pressable>
       <Image
@@ -29,9 +32,16 @@ const MovieCard = ({item}) => {
             ? `${item.overview.substr(0, 97)}...`
             : `${item.overview}`}
         </Text>
-        <View style={styles.bookCta}>
+        <Pressable
+          style={styles.bookCta}
+          onPress={() =>
+            naviagation.navigate('MovieScreen', {
+              title: item.original_title,
+              selectedCity: selectedCity,
+            })
+          }>
           <Text style={styles.bookNow}>Book Now</Text>
-        </View>
+        </Pressable>
       </View>
     </Pressable>
   );

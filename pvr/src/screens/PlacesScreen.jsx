@@ -81,7 +81,7 @@ const PlacesScreen = () => {
     },
     {
       id: 8,
-      name: 'Howrah',
+      name: 'Kolkata',
       image:
         'https://www.oyorooms.com/travel-guide/wp-content/uploads/2021/05/Visit-in-Kolkata-1.jpg',
     },

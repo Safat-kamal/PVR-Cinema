@@ -447,7 +447,6 @@ const HomeScreen = () => {
         break;
     }
   };
-
   return (
     <View>
       <FlatList
@@ -455,7 +454,13 @@ const HomeScreen = () => {
         ListHeaderComponent={Header}
         columnWrapperStyle={styles.columns}
         data={sortedData}
-        renderItem={({item, index}) => <MovieCard item={item} key={index} />}
+        renderItem={({item, index}) => (
+          <MovieCard
+            item={item}
+            key={index}
+            selectedCity={selectedCity ? selectedCity : 'Delhi'}
+          />
+        )}
       />
       <Pressable
         style={styles.filterContainer}
