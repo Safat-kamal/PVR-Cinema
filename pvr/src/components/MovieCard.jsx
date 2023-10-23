@@ -11,7 +11,6 @@ import {useNavigation} from '@react-navigation/native';
 
 const MovieCard = ({item, selectedCity}) => {
   const naviagation = useNavigation();
-  console.log(selectedCity);
   return (
     <Pressable>
       <Image
