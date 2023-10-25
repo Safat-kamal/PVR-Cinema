@@ -9,6 +9,9 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MovieDetailsScreen from '../screens/MovieDetailsScreen';
 import SeatsScreen from '../screens/SeatsScreen';
+import FoodScreen from '../screens/FoodScreen';
+import PaymentScreen from '../screens/PaymentScreen';
+import ThankYouScreen from '../screens/ThankYouScreen';
 
 const HomeStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
@@ -31,6 +34,21 @@ function HomeStackScreens() {
         name="seatScreen"
         component={SeatsScreen}
         options={{title: ''}}
+      />
+      <HomeStack.Screen
+        name="foodScreen"
+        component={FoodScreen}
+        options={{title: 'Food Court'}}
+      />
+      <HomeStack.Screen
+        name="paymentScreen"
+        component={PaymentScreen}
+        options={{title: 'Payment'}}
+      />
+      <HomeStack.Screen
+        name="thankYouScreen"
+        component={ThankYouScreen}
+        options={{title: 'Thank You'}}
       />
     </HomeStack.Navigator>
   );

@@ -853,7 +853,13 @@ const MovieDetailsScreen = () => {
                         <Pressable
                           key={idx}
                           style={styles.showTimeContainer}
-                          onPress={() => navigation.navigate('seatScreen')}>
+                          onPress={() =>
+                            navigation.navigate('seatScreen', {
+                              showTime: show,
+                              Date: selectedDate,
+                              movieName: route.params.title,
+                            })
+                          }>
                           <Text style={styles.showTime}>{show}</Text>
                         </Pressable>
                       ))

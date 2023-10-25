@@ -1,8 +1,18 @@
-import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const SeatsScreen = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
   const [rows, setRows] = useState([
     {
       row: 'A',
@@ -141,17 +151,49 @@ const SeatsScreen = () => {
       setSelectedSeats(prevState => [...prevState, {row, seat}]);
     }
   };
-  const payCta = () => {
-    const updatedRows = [...rows];
-    selectedSeats.forEach(seat => {
-      const rowIndex = updatedRows.findIndex(row => row.row === seat.row);
-      const seatIndex = updatedRows[rowIndex].seats.findIndex(
-        s => s.seat === seat.seat,
-      );
-      updatedRows[rowIndex].seats[seatIndex].bookingStatus = 'booked';
-    });
-    setRows(updatedRows);
-    setSelectedSeats([]);
+  const continuePress = () => {
+    if (selectedSeats && selectedSeats.length > 0) {
+      Alert.alert('Do you want to add some beverages?', '', [
+        {
+          text: 'Yes',
+          onPress: () =>
+            navigation.navigate('foodScreen', {
+              movieName: route.params.movieName,
+              Seats: selectedSeats,
+              showTime: route.params.showTime,
+              Date: route.params.Date,
+            }),
+        },
+        {
+          text: 'No',
+          onPress: () =>
+            navigation.navigate('paymentScreen', {
+              movieName: route.params.movieName,
+              Seats: selectedSeats,
+              showTime: route.params.showTime,
+              Date: route.params.Date,
+              Foods: null,
+            }),
+        },
+      ]);
+    } else {
+      Alert.alert('Please Choose atlease one Seat to continue', [
+        {
+          text: 'OK',
+        },
+      ]);
+    }
+
+    // const updatedRows = [...rows];
+    // selectedSeats.forEach(seat => {
+    //   const rowIndex = updatedRows.findIndex(row => row.row === seat.row);
+    //   const seatIndex = updatedRows[rowIndex].seats.findIndex(
+    //     s => s.seat === seat.seat,
+    //   );
+    //   updatedRows[rowIndex].seats[seatIndex].bookingStatus = 'booked';
+    // });
+    // setRows(updatedRows);
+    // setSelectedSeats([]);
   };
   return (
     <View>
@@ -198,28 +240,9 @@ const SeatsScreen = () => {
         </View>
       </View>
       <View style={styles.paymentInfo}>
-        <View style={styles.paymentSummary}>
-          <Text style={styles.paymentSummaryText}>SUMMARY </Text>
-          <View style={styles.paymentSummaryDetails}>
-            <Text style={styles.paymentSummaryDetailText}>Total Tickets:</Text>
-            <Text style={styles.paymentSummaryDetailTextRight}>2</Text>
-          </View>
-          <View style={styles.paymentSummaryDetails}>
-            <Text style={styles.paymentSummaryDetailText}>Price:</Text>
-            <Text style={styles.paymentSummaryDetailTextRight}>₹949</Text>
-          </View>
-          <View style={styles.paymentSummaryDetails}>
-            <Text style={styles.paymentSummaryDetailText}>Tax:</Text>
-            <Text style={styles.paymentSummaryDetailTextRight}>₹125</Text>
-          </View>
-          <View style={[styles.paymentSummaryDetails, styles.totalPrice]}>
-            <Text style={styles.paymentSummaryDetailText}>Price To Pay:</Text>
-            <Text style={styles.paymentSummaryDetailTextRight}>₹1074</Text>
-          </View>
-        </View>
-        <Pressable style={styles.proceedToPay} onPress={() => payCta()}>
-          <Text style={styles.proceedToPayText}>Proceed To Pay</Text>
-          <Icon name="arrow-forward" size={28} color="#fff" />
+        <Pressable style={styles.proceedToPay} onPress={() => continuePress()}>
+          <Text style={styles.proceedToPayText}>Continue</Text>
+          <Icon name="chevron-forward-outline" size={26} color="#fff" />
         </Pressable>
       </View>
     </View>
@@ -237,7 +260,7 @@ const styles = StyleSheet.create({
   },
   seatRows: {
     marginHorizontal: 15,
-    height: '52%',
+    height: '69.5%',
   },
   seatRow: {
     flexDirection: 'row',
@@ -282,55 +305,22 @@ const styles = StyleSheet.create({
   seatInfoText: {
     fontWeight: '700',
   },
-  paymentInfo: {
-    gap: 10,
-    paddingHorizontal: 20,
-    backgroundColor: '#eee',
-  },
-  paymentSummaryText: {
-    marginVertical: 4,
-    fontSize: 17,
-    fontWeight: '600',
-    letterSpacing: 1,
-  },
-  paymentSummary: {
-    alignItems: 'flex-end',
-    gap: 6,
-  },
-  paymentSummaryDetails: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 6,
-  },
-  paymentSummaryDetailText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#666',
-  },
-  paymentSummaryDetailTextRight: {
-    fontSize: 17,
-    fontWeight: '600',
-  },
-  totalPrice: {
-    borderTopColor: '#777',
-    borderTopWidth: 0.5,
-    paddingVertical: 3,
-  },
   proceedToPay: {
-    backgroundColor: '#D75B1D',
+    backgroundColor: '#BD1E1E',
     width: 'auto',
     padding: 12,
     borderRadius: 10,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 10,
+    marginHorizontal: 10,
+    marginTop: 10,
   },
   proceedToPayText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
     letterSpacing: 2,
+    textAlign: 'center',
   },
 });
